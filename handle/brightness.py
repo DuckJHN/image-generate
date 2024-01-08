@@ -15,7 +15,7 @@ import cv2 as cv
 
 
 def apply_brightness(img, alpha, beta):
-    if alpha == None & beta == None:
+    if alpha == None and beta == None:
         return img
 
     new_image = cv.convertScaleAbs(img, alpha=alpha, beta=beta)

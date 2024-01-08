@@ -2,12 +2,12 @@
 import argparse
 import generate_image
 import error.argument_parse as exception
+from enumeration.blur_enum import list_type
 
 parse = argparse.ArgumentParser(prog='SPARKMINDS',
                                 description='''Apply new feature to an image. 
                                 Features: rotate, resize, flip, noise, brightness, blur.''',
                                 epilog='''Thank you.''')
-
 
 exception.ErrorCatchingArgumentParser(parse)
 
@@ -46,15 +46,18 @@ parse.add_argument('--hue', type=float,
 
 parse.add_argument('--noise', type=int,
                    help='Level noise in range [0 -100]')
-parse.add_argument('--bt', type=str,
-                   help='Blur type in list [Gaussian, Median, Average]')
+parse.add_argument('--bt', nargs='?', default=None,
+                   help='Blur type in list [Gaussian, Median, Average]', choices=list_type())
 parse.add_argument('--kn', type=int,
                    help='Kernel blur default = 5')
 
 
 args = parse.parse_args()
 
-
+"""_summary_
+    param required:
+        input_path, output_path, limit
+"""
 input_path = args.input_path
 output_path = args.output_path
 limit = args.limit
@@ -62,6 +65,7 @@ limit = args.limit
 resize_percentage = args.resize
 crop_auto = args.crop
 rotation_angle = args.rotation
+
 constrast = args.constrast
 brightness = args.brightness
 saturation = args.saturation
@@ -73,14 +77,6 @@ noise = args.noise
 
 blur_type = args.bt
 kernel = args.kn
-
-print(f"Input Path: {input_path}")
-print(f"Output Path: {output_path}")
-print(f"Number of images: {limit}")
-
-print(f"Resize Percentage: {resize_percentage}")
-print(f"Constrast image param: {constrast}")
-print(f"Brightness image param: {brightness}")
 
 generate_image.generate(input_path=input_path, output_path=output_path,
                         horizontal=flip_horizontal, vertical=flip_vertical,

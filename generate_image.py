@@ -6,7 +6,7 @@ import handle.crop_image as cr
 import handle.resize as rs
 import handle.brightness as br
 from utils.folder_util import check_folder_or_create
-import handle.noise_blur as nb
+from handle.noise_blur import NoiseBlur as nb
 from utils import value_util
 
 
@@ -54,9 +54,11 @@ def generate(*self, input_path, output_path,
         changed_color = br.apply_brightness(
             flipped_img, alpha=constrast, beta=brightness)
 
-        noise_img = nb.apply_noise(changed_color, max_level=noise_max_level)
-        blur_img = nb.apply_blur(noise_img, blur_type, max_kernel)
+        noise_img = nb.apply_noise(
+            changed_color, max_level=noise_max_level)
+        blurred_image = nb.apply_blur(
+            noise_img, blur_type=blur_type, max_kernel=max_kernel)
 
         output_filename = f"{x + 1}_generated_image.jpg"
         output_filepath = os.path.join(output_path, output_filename)
-        cv.imwrite(output_filepath, blur_img)
+        cv.imwrite(output_filepath, blurred_image)

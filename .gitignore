@@ -17,7 +17,7 @@ coverage.xml
 .pytest_cache/
 cover/
 
-
+/output
 
 docs/_build/
 
