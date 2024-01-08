@@ -1,8 +1,8 @@
-<h1 align="center" id="title">Image generator</h1>
+<h1 align="center" id="title"> 📷 Image generator</h1>
 
-<p id="description">Create multiple from input image.</p>
+Tool generate mutil image from image input
 
-<h2>🧐 Features</h2>
+## 🧐 Features
 
 Here're some of the project's best features:
 
@@ -13,17 +13,62 @@ Here're some of the project's best features:
 - Flip (horizontal vertical)
 - Brightness - contrast
 - Modify Exif(inprocess)
+- Convert or compress image(inprocess)
 
-<h2>🛠️ Installation Steps:</h2>
+## 🚀Environment Variables
 
-<p>1. Install library</p>
+To run this project, you will need to add env python in this project use python version
+`Python 3.11`
 
+👍 You can use a lower version, but I recommend using version 3.8 or higher
+
+## 🛠️ Installation
+
+Install library necessary
+In this project using opencv-python for process image
+
+#### Python 2
+
+```bash
+    pip install -r requirements.txt
 ```
-pip install -r requirements.txt
+
+#### Python 3
+
+```bash
+    pip3 install -r requirements.txt
 ```
 
-<p>2. Run command line interface(CLI) help</p>
+## ⭐ Run Locally
 
+Clone the project
+
+```bash
+    git clone https://github.com/MaxiRadomski/picturegenerator.git
 ```
-py app.py --help
+
+Go to the project directory
+
+```bash
+    cd picturegenerator
+```
+
+Install library
+
+```bash
+    pip install -r requirements.txt
+```
+
+Run command line interface(CLI) help
+
+#### Python 2
+
+```bash
+    py app.py --help
+```
+
+#### Python 3
+
+```bash
+    python3 app.py --help
 ```

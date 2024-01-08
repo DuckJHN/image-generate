@@ -32,11 +32,6 @@ random_contrast = np.random.uniform(0.1, 1.5)
 random_saturation = np.random.uniform(0.1, 1.5)
 random_hue = np.random.uniform(-20, 20)
 
-# brightness = float(input('Brightness: '))
-# constrast = float(input('Constrast: '))
-# saturation = float(input('Saturation: '))
-# hue = float(input('Hue: '))
-
 
 img_adjusted = adjust_color(img, brightness=random_brightness,
                             contrast=random_contrast, saturation=random_saturation, hue=random_hue)

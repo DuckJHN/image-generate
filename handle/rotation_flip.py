@@ -1,10 +1,10 @@
 import cv2 as cv
 import numpy as np
-import random
+from utils import value_util
 
 
-def apply_rotation(image, angle=360):
-    # angle = np.random.uniform(0, 360)
+def apply_rotation(image, angle):
+    angle = value_util.get_random_number(angle-45, angle+45)
     height, width = image.shape[:2]
     center = (width / 2, height / 2)
     rotation_matrix = cv.getRotationMatrix2D(center, angle, 1.0)

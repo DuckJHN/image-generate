@@ -16,34 +16,34 @@ parse.add_argument('input_path', help='Path to the input image')
 parse.add_argument('output_path', help='Path to the output image')
 
 
-parse.add_argument('limit', help='Limit image generate')
+parse.add_argument('limit', help='Limit image generate', default=5)
 
 # Options
-parse.add_argument('--resize', type=float,
+parse.add_argument('--resize', type=int, default=90,
                    help='Resize percentage for images.')
-parse.add_argument('--crop', type=bool,
-                   help='Cropped image auto')
+parse.add_argument('--crop', action='store_true',
+                   help='Cropped image auto (default: False)')
 
 parse.add_argument('--rotation', type=float, help='Rotation angle for images.')
 
-parse.add_argument('--flip-horizontal', '-fh',
+parse.add_argument('--flip-horizontal',
                    action=argparse.BooleanOptionalAction, help='Flip images horizontally.')
-parse.add_argument('--flip-vertical', '-fv',
+parse.add_argument('--flip-vertical',
                    action=argparse.BooleanOptionalAction, help='Flip images vertically.')
 
-parse.add_argument('--constrast', type=float,
-                   help='Constrast images in range [0 - 0.1]')
+parse.add_argument('--constrast', type=int, default=50,
+                   help='Constrast images in range [0 - 1]')
 
 
-parse.add_argument('--brightness', type=float,
+parse.add_argument('--brightness', type=int, default=0,
                    help="Brightness images in range [0 - 100]")
 
 
-parse.add_argument('--noise', type=int,
+parse.add_argument('--noise', type=int, default=0,
                    help='Level noise in range [0 - 100]')
-parse.add_argument('--bt', nargs='?', default=None,
+parse.add_argument('--bt', nargs='?', default='Gaussian',
                    help='Blur type in list [Gaussian, Median, Average]', choices=list_type())
-parse.add_argument('--kn', type=int,
+parse.add_argument('--kn', type=int, default=5,
                    help='Kernel blur default = 5')
 
 

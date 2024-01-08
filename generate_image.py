@@ -25,31 +25,34 @@ def generate(*self, input_path, output_path,
         raise Exception("Img invalid")
 
     output_path = check_folder_or_create(output_path)
+    limit = value_util.get_number_from_str(limit)
+    max_angle = value_util.get_number_or_default(value=max_angle, default=0)
 
-    limit = value_util.getNumberOrDefault(value=limit, default=1)
-    max_angle = value_util.getNumberOrDefault(value=max_angle, default=0)
-    max_percentage = value_util.getNumberOrDefault(
+    max_percentage = value_util.get_number_or_default(
         value=max_percentage, default=100)
-    crop = value_util.getBooleanOrDefault(value=crop)
-    noise_max_level = value_util.getNumberOrDefault(
+
+    crop = value_util.get_boolean_or_default(value=crop)
+
+    noise_max_level = value_util.get_number_or_default(
         value=noise_max_level, default=0)
-    max_kernel = value_util.getNumberOrDefault(value=max_kernel, default=5)
-    # constrast = value_util.getNumberOrDefault(value=constrast, default=0)
-    # brightness = value_util.getNumberOrDefault(value=brightness, default=0)
+
+    constrast = (value_util.get_number_or_default(
+        value=constrast, default=0))/100
     for x in range(limit):
 
         # Random
-        percentage = np.random.uniform(max_percentage, 100)
-        angle = np.random.uniform(0, max_angle)
+        percentage = value_util.get_random_number(max_percentage, 100)
         if constrast is not None or brightness is not None:
-            constrast = np.random.uniform(constrast - 0.1, constrast + 0.1)
-            brightness = np.random.uniform(brightness - 20, brightness + 20)
+            constrast = value_util.get_random_number(
+                constrast - 0.1, constrast + 0.1)
+            brightness = value_util.get_random_number(
+                brightness - 20, brightness + 20)
 
         resized_img = rs.apply_resize(img, percentage=percentage)
         if crop:
             resized_img = cr.apply_crop(resized_img.copy())
 
-        rotation_img = rotation.apply_rotation(resized_img, angle=angle)
+        rotation_img = rotation.apply_rotation(resized_img, angle=max_angle)
         flipped_img = rotation.apply_flip(
             rotation_img, horizontal, vertical)
 
