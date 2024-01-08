@@ -32,20 +32,15 @@ parse.add_argument('--flip-vertical', '-fv',
                    action=argparse.BooleanOptionalAction, help='Flip images vertically.')
 
 parse.add_argument('--constrast', type=float,
-                   help='Constrast images in range [0.1 - 1.5]')
+                   help='Constrast images in range [0 - 0.1]')
 
 
 parse.add_argument('--brightness', type=float,
-                   help="Brightness images in range [-0.5, 0.5]")
-
-parse.add_argument('--saturation', type=float,
-                   help="Saturation images in range [0.1, 0.5]")
-parse.add_argument('--hue', type=float,
-                   help="hue images in range [-20, 20]")
+                   help="Brightness images in range [0 - 100]")
 
 
 parse.add_argument('--noise', type=int,
-                   help='Level noise in range [0 -100]')
+                   help='Level noise in range [0 - 100]')
 parse.add_argument('--bt', nargs='?', default=None,
                    help='Blur type in list [Gaussian, Median, Average]', choices=list_type())
 parse.add_argument('--kn', type=int,
@@ -68,8 +63,6 @@ rotation_angle = args.rotation
 
 constrast = args.constrast
 brightness = args.brightness
-saturation = args.saturation
-hue = args.hue
 
 flip_horizontal = args.flip_horizontal
 flip_vertical = args.flip_vertical
@@ -83,4 +76,6 @@ generate_image.generate(input_path=input_path, output_path=output_path,
                         blur_type=blur_type, max_kernel=kernel,
                         noise_max_level=noise,
                         crop=crop_auto,
-                        max_percentage=resize_percentage, max_angle=rotation_angle, limit=limit)
+                        brightness=brightness, constrast=constrast,
+                        max_percentage=resize_percentage, max_angle=rotation_angle,
+                        limit=limit)

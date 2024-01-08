@@ -14,12 +14,12 @@ def generate(*self, input_path, output_path,
              max_percentage,
              crop,
              max_angle,
-             constrast=1, brightness=1, saturation=1, hue=0,
+             constrast, brightness,
              horizontal=False, vertical=False,
              noise_max_level, blur_type=None, max_kernel,
              limit=1):
 
-    img = cv.imread(input_path, cv.IMREAD_COLOR)
+    img = cv.imread(input_path, cv.COLOR_BGR2RGB)
 
     if img is None:
         raise Exception("Img invalid")
@@ -34,14 +34,16 @@ def generate(*self, input_path, output_path,
     noise_max_level = value_util.getNumberOrDefault(
         value=noise_max_level, default=0)
     max_kernel = value_util.getNumberOrDefault(value=max_kernel, default=5)
+    # constrast = value_util.getNumberOrDefault(value=constrast, default=0)
+    # brightness = value_util.getNumberOrDefault(value=brightness, default=0)
     for x in range(limit):
 
         # Random
         percentage = np.random.uniform(max_percentage, 100)
         angle = np.random.uniform(0, max_angle)
-
-        constrast = np.random.uniform(constrast - 0.1, constrast + 0.1)
-        brightness = np.random.uniform(brightness - 20, brightness + 20)
+        if constrast is not None or brightness is not None:
+            constrast = np.random.uniform(constrast - 0.1, constrast + 0.1)
+            brightness = np.random.uniform(brightness - 20, brightness + 20)
 
         resized_img = rs.apply_resize(img, percentage=percentage)
         if crop:

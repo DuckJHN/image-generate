@@ -2,10 +2,10 @@ import cv2 as cv
 
 """_summary_
  @parameter:
-    Alpha is contrast
-        low: 0 -1
-        hight: > 1
-    Beta is brightness in value [-127, 127]
+    alpha 1  beta 0      --> no change  
+    0 < alpha < 1        --> lower contrast  
+    alpha > 1            --> higher contrast  
+    -127 < beta < +127   --> good range for brightness values
 """
 
 # for y in range(img.shape[0]):

@@ -12,6 +12,7 @@ Here're some of the project's best features:
 - Rotate
 - Flip (horizontal vertical)
 - Brightness - contrast
+- Modify Exif(inprocess)
 
 <h2>🛠️ Installation Steps:</h2>
 
