@@ -1,5 +1,5 @@
 import cv2 as cv
-
+from utils.value_util import get_random_number, get_number_or_default
 """_summary_
  @parameter:
     alpha 1  beta 0      --> no change  
@@ -8,15 +8,35 @@ import cv2 as cv
     -127 < beta < +127   --> good range for brightness values
 """
 
-# for y in range(img.shape[0]):
-#     for x in range(img.shape[1]):
-#         for c in range(img.shape[2]):
-#             new_image[y, x, c] = np.clip(alpha * img[y, x, c] + beta, 0, 255)
-
 
 def apply_brightness(img, alpha, beta):
-    if alpha == None and beta == None:
+    if alpha is None and beta is None:
         return img
 
-    new_image = cv.convertScaleAbs(img, alpha=alpha, beta=beta)
+    if alpha == None and beta == None:
+        min_value_alpha = min(alpha)/100
+        max_value_alpha = max(alpha)/100
+
+        alpha = get_random_number(
+            min_value_alpha, max_value_alpha) if alpha is not None else None
+        new_image = cv.convertScaleAbs(img, alpha=alpha)
+    elif alpha == None and beta == None:
+        min_value_beta = min(beta)
+        max_value_beta = max(beta)
+        beta = get_random_number(
+            min_value_beta, max_value_beta) if beta is not None else None
+        new_image = cv.convertScaleAbs(img, beta=beta)
+    else:
+        min_value_alpha = min(alpha)/100
+        max_value_alpha = max(alpha)/100
+
+        min_value_beta = min(beta)
+        max_value_beta = max(beta)
+        alpha = get_random_number(
+            min_value_alpha, max_value_alpha) if alpha is not None else None
+        beta = get_random_number(
+            min_value_beta, max_value_beta) if beta is not None else None
+
+        new_image = cv.convertScaleAbs(img, alpha=alpha, beta=beta)
+
     return new_image

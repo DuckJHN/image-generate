@@ -10,11 +10,12 @@ class NoiseBlur:
     def apply_noise(image, max_level):
         if max_level is None:
             return image
-
+        min_value = min(max_level)
+        max_value = max(max_level)
         noise_level = np.random.uniform(
-            0, max_level, size=(1, 1, image.shape[2]))
+            0, max_value, size=(1, 1, image.shape[2]))
 
-        noise = np.random.normal(0, noise_level, size=image.shape)
+        noise = np.random.normal(min_value, noise_level, size=image.shape)
         noisy_image = np.clip(image + noise, 0, 255).astype(np.uint8)
         return noisy_image
 

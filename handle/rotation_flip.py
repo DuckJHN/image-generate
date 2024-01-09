@@ -4,7 +4,12 @@ from utils import value_util
 
 
 def apply_rotation(image, angle):
-    angle = value_util.get_random_number(angle-45, angle+45)
+    if angle is None or angle == 0:
+        return image
+    min_value = min(angle)
+    max_value = max(angle)
+
+    angle = value_util.get_random_number(min_value, max_value)
     height, width = image.shape[:2]
     center = (width / 2, height / 2)
     rotation_matrix = cv.getRotationMatrix2D(center, angle, 1.0)
