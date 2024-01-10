@@ -1,12 +1,13 @@
 import cv2 as cv
+import math
 
 
-def apply_crop(img):
+def apply_crop(img, percentage):
     mx = (0, 0, 0, 0)
     mx_area = 0
     if img is None:
         return
-
+    h_image, w_image, _ = img.shape
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 
     retval, thresh_gray = cv.threshold(
@@ -25,5 +26,8 @@ def apply_crop(img):
 
     x, y, w, h = mx
 
-    roi = img[y:y+h, x:x+w]
+    width_right = math.floor(((w_image - (x+w))*percentage)/100)
+    width_left = math.floor(x*(percentage/100))
+
+    roi = img[y:y+h, x-width_left: x+w+width_right]
     return roi

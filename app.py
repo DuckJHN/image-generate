@@ -23,8 +23,8 @@ parse.add_argument('limit', help='Limit image generate', default=5)
 # Options
 parse.add_argument('--resize', type=int, nargs='*', default=100,
                    help='Resize percentage in range [10 - 200].')
-parse.add_argument('--crop', action='store_true',
-                   help='Cropped image auto (default: False)')
+parse.add_argument('--crop', type=int, nargs='?', default=100,
+                   help='Cropped image by percentage (default: no Change)')
 
 parse.add_argument('--rotation', type=int, nargs='*', default=0,
                    help='Rotation angle [0-360].')

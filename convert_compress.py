@@ -57,12 +57,6 @@ def convert_and_compress(image, output_path):
         print(
             f"Image saved successfully to '{output_path}' in {format} format. => {output_filename}")
 
-    # if success:
-    #     print(
-    #         f"Image saved successfully to '{output_path}' in {format} format. => {output_filename}")
-    # else:
-    #     print(f"Error: Failed to save image to '{output_path}'.")
-
 
 def str_time_prop(start, end, time_format, prop):
     """Get a time at a proportion of a range of two formatted times.

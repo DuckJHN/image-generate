@@ -1,3 +1,4 @@
+import os
 import cv2 as cv
 import handle.rotation_flip as rotation
 import handle.crop_image as cr
@@ -16,32 +17,38 @@ def generate(*self, input_path, output_path,
              horizontal=False, vertical=False,
              noise_max_level, blur_type=None, max_kernel,
              limit=1):
+    if not os.path.exists(input_path):
+        raise Exception("Folder not exist")
 
-    img = cv.imread(input_path)
+    for images in os.listdir(input_path):
 
-    if img is None:
-        raise Exception("Img invalid")
+        if not images.endswith((".png", ".jpg", ".jpeg")):
+            continue
+        image_path = os.path.join(input_path, images)
 
-    limit = value_util.get_number_from_str(limit)
+        img = cv.imread(image_path)
+        if img is None:
+            raise Exception("Img invalid")
 
-    crop = value_util.get_boolean_or_default(value=crop)
+        limit = value_util.get_number_from_str(limit)
 
-    for x in range(limit):
+        for x in range(limit):
 
-        resized_img = rs.apply_resize(img, max_percentage=max_percentage)
-        if crop:
-            resized_img = cr.apply_crop(resized_img.copy())
+            resized_img = rs.apply_resize(img, max_percentage=max_percentage)
 
-        rotation_img = rotation.apply_rotation(resized_img, angle=max_angle)
-        flipped_img = rotation.apply_flip(
-            rotation_img, horizontal, vertical)
+            resized_img = cr.apply_crop(resized_img.copy(), percentage=crop)
 
-        changed_color = br.apply_brightness(
-            flipped_img, alpha=constrast, beta=brightness)
+            rotation_img = rotation.apply_rotation(
+                resized_img, angle=max_angle)
+            flipped_img = rotation.apply_flip(
+                rotation_img, horizontal, vertical)
 
-        noise_img = nb.apply_noise(
-            changed_color, max_level=noise_max_level)
-        blurred_image = nb.apply_blur(
-            noise_img, blur_type=blur_type, max_kernel=max_kernel)
+            changed_color = br.apply_brightness(
+                flipped_img, alpha=constrast, beta=brightness)
 
-        convert_compress.convert_and_compress(blurred_image, output_path)
+            noise_img = nb.apply_noise(
+                changed_color, max_level=noise_max_level)
+            blurred_image = nb.apply_blur(
+                noise_img, blur_type=blur_type, max_kernel=max_kernel)
+
+            convert_compress.convert_and_compress(blurred_image, output_path)
