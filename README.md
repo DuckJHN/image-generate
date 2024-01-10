@@ -72,3 +72,9 @@ Run command line interface(CLI) help
 ```bash
     python3 app.py --help
 ```
+
+#### Example
+
+```bash
+    py app.py images output 10 --flip-horizontal --noise 10 20 --resize 80 90 --rotation 0 30 --brightness 20 30 --constrast 50 80 --blur gaussian --kn 3 --crop 80
+```

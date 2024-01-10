@@ -7,6 +7,8 @@ import handle.brightness as br
 from handle.noise_blur import NoiseBlur as nb
 from utils import value_util
 import convert_compress
+import numpy as np
+from handle.color import apply_change_color
 
 
 def generate(*self, input_path, output_path,
@@ -51,4 +53,5 @@ def generate(*self, input_path, output_path,
             blurred_image = nb.apply_blur(
                 noise_img, blur_type=blur_type, max_kernel=max_kernel)
 
+            blurred_image = np.array(apply_change_color(blurred_image))
             convert_compress.convert_and_compress(blurred_image, output_path)
