@@ -8,7 +8,7 @@ from handle.noise_blur import NoiseBlur as nb
 from utils import value_util
 import convert_compress
 import numpy as np
-from handle.color import apply_change_color
+from handle.color import apply_change_color, apply_contrast
 
 
 def generate(*self, input_path, output_path,
@@ -36,22 +36,24 @@ def generate(*self, input_path, output_path,
 
         for x in range(limit):
 
-            resized_img = rs.apply_resize(img, max_percentage=max_percentage)
-
-            resized_img = cr.apply_crop(resized_img.copy(), percentage=crop)
+            changed_crop = cr.apply_crop(img, percentage=crop)
+            resized_img = rs.apply_resize(
+                changed_crop.copy(), max_percentage=max_percentage)
 
             rotation_img = rotation.apply_rotation(
                 resized_img, angle=max_angle)
             flipped_img = rotation.apply_flip(
                 rotation_img, horizontal, vertical)
 
-            changed_color = br.apply_brightness(
+            changed_brightness = br.apply_brightness(
                 flipped_img, alpha=constrast, beta=brightness)
 
             noise_img = nb.apply_noise(
-                changed_color, max_level=noise_max_level)
+                changed_brightness, max_level=noise_max_level)
             blurred_image = nb.apply_blur(
                 noise_img, blur_type=blur_type, max_kernel=max_kernel)
 
-            blurred_image = np.array(apply_change_color(blurred_image))
-            convert_compress.convert_and_compress(blurred_image, output_path)
+            changed_color = np.array(apply_change_color(blurred_image))
+            changed_contrast = np.array(apply_contrast(changed_color))
+            convert_compress.convert_and_compress(
+                changed_contrast, output_path)

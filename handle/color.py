@@ -63,7 +63,6 @@ def apply_change_color(img):
             r, g, b = img.getpixel((x, y))
             r, g, b = random_pixel_rgb(combination, r, g, b)
             img.putpixel((x, y), (r, g, b))
-    # img.show()
     return img
 
 
@@ -74,14 +73,12 @@ def random_pixel_rgb(combination, r, g, b):
     return _r, _g, _b
 
 
-def apply_contrast(image_path, contrast_factor=1.5):
-    original_image = Image.open(image_path)
+def apply_contrast(img, contrast_factor=1.5):
+    original_image = Image.frombytes(
+        'RGB', (img.shape[1], img.shape[0]), img.tobytes())
 
     contrast = ImageEnhance.Contrast(original_image)
 
     new_image = contrast.enhance(contrast_factor)
 
-    new_image.show()
-
-
-# apply_change_color('../images/nft3.jpg')
+    return new_image
