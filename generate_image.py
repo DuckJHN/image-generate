@@ -17,7 +17,6 @@ start_time = time.time()
 
 def process_image(image_path, output_path, max_percentage, crop, max_angle, constrast, brightness,
                   horizontal, vertical, noise_max_level, blur_type, max_kernel, limit):
-    print(image_path)
     img = cv.imread(image_path)
     if img is None:
         raise Exception(f"Invalid image: {image_path}")

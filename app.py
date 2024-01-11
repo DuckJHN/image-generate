@@ -78,8 +78,6 @@ if __name__ == '__main__':
     blur_type = args.blur
     kernel = args.kn
 
-    print("folder path: ", folder_path)
-    print("image path: ", image_path)
     if folder_path is not None:
         generate_image.generate_from_folder(input_path=folder_path, output_path=output_path,
                                             horizontal=flip_horizontal, vertical=flip_vertical,
