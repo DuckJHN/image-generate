@@ -2,6 +2,7 @@
 import argparse
 import generate_image as generate_image
 import error.argument_parse as exception
+from error.argument_parse import check_input_arguments
 from enumeration.blur_enum import list_type
 
 if __name__ == '__main__':
@@ -13,11 +14,15 @@ if __name__ == '__main__':
 
     exception.ErrorCatchingArgumentParser(parse)
 
-    parse.add_argument('input_path', help='Path to the input image')
+    # Require
+    parse.add_argument('--folder_path', nargs='?',
+                       help='Path to the input folder images')
+    parse.add_argument('--image_path', nargs='?',
+                       help='Path to the input image')
 
-    parse.add_argument('output_path', help='Path to the output image')
+    parse.add_argument('--output_path', help='Path to the output image')
 
-    parse.add_argument('limit', help='Limit image generate', default=5)
+    parse.add_argument('--limit', help='Limit image generate', default=5)
 
     # Options
     parse.add_argument('--resize', type=int, nargs='*', default=100,
@@ -47,12 +52,14 @@ if __name__ == '__main__':
                        help='Kernel blur default = 5')
 
     args = parse.parse_args()
+    check_input_arguments(parse, args)
 
     """_summary_
         param required:
             input_path, output_path, limit
     """
-    input_path = args.input_path
+    folder_path = args.folder_path
+    image_path = args.image_path
     output_path = args.output_path
     limit = args.limit
 
@@ -71,11 +78,23 @@ if __name__ == '__main__':
     blur_type = args.blur
     kernel = args.kn
 
-    generate_image.generate(input_path=input_path, output_path=output_path,
-                            horizontal=flip_horizontal, vertical=flip_vertical,
-                            blur_type=blur_type, max_kernel=kernel,
-                            noise_max_level=noise,
-                            crop=crop_auto,
-                            brightness=brightness, constrast=constrast,
-                            max_percentage=resize_percentage, max_angle=rotation_angle,
-                            limit=limit)
+    print("folder path: ", folder_path)
+    print("image path: ", image_path)
+    if folder_path is not None:
+        generate_image.generate_from_folder(input_path=folder_path, output_path=output_path,
+                                            horizontal=flip_horizontal, vertical=flip_vertical,
+                                            blur_type=blur_type, max_kernel=kernel,
+                                            noise_max_level=noise,
+                                            crop=crop_auto,
+                                            brightness=brightness, constrast=constrast,
+                                            max_percentage=resize_percentage, max_angle=rotation_angle,
+                                            limit=limit)
+    elif image_path is not None:
+        generate_image.process_image(image_path=image_path, output_path=output_path,
+                                     horizontal=flip_horizontal, vertical=flip_vertical,
+                                     blur_type=blur_type, max_kernel=kernel,
+                                     noise_max_level=noise,
+                                     crop=crop_auto,
+                                     brightness=brightness, constrast=constrast,
+                                     max_percentage=resize_percentage, max_angle=rotation_angle,
+                                     limit=limit)
