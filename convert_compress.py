@@ -6,6 +6,7 @@ import time
 import calendar
 import exif
 from datetime import datetime
+import utils
 
 
 now = datetime.now()
@@ -16,19 +17,12 @@ software = "created in python with numpy"
 author = "Rune Monzel"
 
 
-def check_folder_or_create(path):
-    is_exist = os.path.exists(path)
-    if not is_exist:
-        os.makedirs(path)
-    return path
-
-
 current_GMT = time.gmtime()
 time_stamp = calendar.timegm(current_GMT)
 
 
 def convert_and_compress(image, output_path):
-    output_path = check_folder_or_create(output_path)
+    output_path = utils.check_folder_or_create(output_path)
 
     format = random.choice(['JPG', 'PNG'])
     compression_level = 100

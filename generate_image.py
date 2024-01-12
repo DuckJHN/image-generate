@@ -1,5 +1,7 @@
 import os
+import time
 import cv2 as cv
+import numpy as np
 import handle.rotation_flip as rotation
 import handle.crop_image as cr
 import handle.resize as rs
@@ -7,10 +9,8 @@ import handle.brightness as br
 from handle.noise_blur import NoiseBlur as nb
 from utils import value_util
 import convert_compress
-import numpy as np
 from handle.color import apply_change_color, apply_contrast
 import concurrent.futures
-import time
 
 start_time = time.time()
 

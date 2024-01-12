@@ -3,7 +3,6 @@ import numpy as np
 import cv2
 from itertools import product
 import random
-import io
 
 
 def adjust_color(image, brightness=None, contrast=None, saturation=None, hue=None):
