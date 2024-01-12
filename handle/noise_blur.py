@@ -20,9 +20,7 @@ class NoiseBlur:
         return noisy_image
 
     @staticmethod
-    def apply_blur(image, blur_type='gaussian', max_kernel=5):
-        blur_type = blur_type if blur_type is not None else 'other'
-
+    def apply_blur(image, blur_type, max_kernel):
         type_exist = blur_enum.check_exist(blur_type.lower())
         if type_exist is None:
             return image

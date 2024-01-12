@@ -22,19 +22,22 @@ def process_image(image_path, output_path, max_percentage, crop, max_angle, cons
         raise Exception(f"Invalid image: {image_path}")
 
     limit = value_util.get_number_from_str(limit)
-
     for x in range(limit):
         changed_crop = cr.apply_crop(img, percentage=crop)
         resized_img = rs.apply_resize(
-            changed_crop.copy(), max_percentage=max_percentage)
+            changed_crop, max_percentage=max_percentage)
+
         rotation_img = rotation.apply_rotation(resized_img, angle=max_angle)
         flipped_img = rotation.apply_flip(rotation_img, horizontal, vertical)
+
         changed_brightness = br.apply_brightness(
             flipped_img, alpha=constrast, beta=brightness)
+
         noise_img = nb.apply_noise(
             changed_brightness, max_level=noise_max_level)
         blurred_image = nb.apply_blur(
             noise_img, blur_type=blur_type, max_kernel=max_kernel)
+
         changed_color = np.array(apply_change_color(blurred_image))
         changed_contrast = np.array(apply_contrast(changed_color))
         convert_compress.convert_and_compress(changed_contrast, output_path)
@@ -47,7 +50,6 @@ def generate_from_folder(input_path, output_path, max_percentage, crop, max_angl
 
     image_paths = [os.path.join(input_path, image) for image in os.listdir(input_path)
                    if image.lower().endswith((".png", ".jpg", ".jpeg"))]
-
     limit = value_util.get_number_from_str(limit)
 
     with concurrent.futures.ProcessPoolExecutor() as executor:
