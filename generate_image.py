@@ -10,7 +10,9 @@ from handle.noise_blur import NoiseBlur as nb
 from utils import value_util
 import convert_compress
 from handle.color import apply_change_color, apply_contrast
+from concurrent.futures import as_completed
 import concurrent.futures
+from tqdm import tqdm
 
 start_time = time.time()
 
@@ -51,16 +53,21 @@ def generate_from_folder(input_path, output_path, max_percentage, crop, max_angl
     limit = value_util.get_number_from_str(limit)
 
     with concurrent.futures.ProcessPoolExecutor() as executor:
-        for i in range(0, len(image_paths), batch_size):
-            batch_paths = image_paths[i:i + batch_size]
+        futures = []
+        for image_path in image_paths:
+            future = executor.submit(process_image, image_path, output_path, max_percentage, crop,
+                                     max_angle, constrast, brightness, horizontal, vertical,
+                                     noise_max_level, blur_type, max_kernel, limit)
+            futures.append(future)
 
-            futures = []
-            for image_path in batch_paths:
-                futures.append(executor.submit(process_image, image_path, output_path, max_percentage, crop,
-                                               max_angle, constrast, brightness, horizontal, vertical,
-                                               noise_max_level, blur_type, max_kernel, limit))
+        progress_bar = tqdm(total=len(futures),
+                            desc="Processing images", unit="image")
 
-            concurrent.futures.wait(futures)
+        for completed_future in as_completed(futures):
+            progress_bar.update(1)
+
+        progress_bar.close()
+
     calculate_time()
 
 
