@@ -5,8 +5,8 @@ import math
 def apply_crop(img, percentage):
     mx = (0, 0, 0, 0)
     mx_area = 0
-    if img is None:
-        return
+    if img is None or percentage == 100:
+        return img
     h_image, w_image, _ = img.shape
     gray = cv.cvtColor(img, cv.COLOR_BGR2GRAY)
 

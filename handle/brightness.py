@@ -13,7 +13,6 @@ from utils.value_util import get_random_number, find_min_max
 def apply_brightness(img, alpha=None, beta=None):
     if alpha is None and beta is None:
         return img
-
     if alpha == None and beta == None:
         min_value_alpha, max_value_alpha = find_min_max(alpha)
 

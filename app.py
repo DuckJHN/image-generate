@@ -2,8 +2,9 @@
 import argparse
 import generate_image as generate_image
 import error.argument_parse as exception
-from error.argument_parse import check_input_arguments
+from error.argument_parse import check_input_arguments, check_enough_params
 from enumeration.blur_enum import list_type
+from handle.argument import param_cli
 
 if __name__ == '__main__':
 
@@ -46,7 +47,7 @@ if __name__ == '__main__':
 
     parse.add_argument('--noise', type=int, nargs='*', default=0,
                        help='Level noise in range [0 - 100]')
-    parse.add_argument('--blur', nargs='?', default='Gaussian',
+    parse.add_argument('--blur', nargs='?', default='other',
                        help='Blur type in list [Gaussian, Median, Average]', choices=list_type())
     parse.add_argument('--kn', type=int, default=5,
                        help='Kernel blur default = 5')
@@ -58,10 +59,19 @@ if __name__ == '__main__':
         param required:
             input_path, output_path, limit
     """
+
+    args = param_cli.check_and_set_default(parse, args)
     folder_path = args.folder_path
     image_path = args.image_path
     output_path = args.output_path
     limit = args.limit
+
+    """_summary_
+        param optional:
+            For params: noise, resize, rotate, brightness, contrast
+            1. If empty will take default parameters
+            2. Complete the min and max fields
+    """
 
     resize_percentage = args.resize
     crop_auto = args.crop
@@ -77,6 +87,11 @@ if __name__ == '__main__':
 
     blur_type = args.blur
     kernel = args.kn
+
+    params_to_check = ['noise', 'resize',
+                       'rotation', 'brightness', 'constrast']
+    for param in params_to_check:
+        check_enough_params(parse, args, param)
 
     if folder_path is not None:
         generate_image.generate_from_folder(input_path=folder_path, output_path=output_path,

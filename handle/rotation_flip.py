@@ -8,7 +8,6 @@ def apply_rotation(image, angle):
         return image
     min_value = min(angle)
     max_value = max(angle)
-
     angle = value_util.get_random_number(min_value, max_value)
     height, width = image.shape[:2]
     center = (width / 2, height / 2)

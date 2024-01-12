@@ -1,4 +1,5 @@
 import argparse
+from constant.variable import *
 
 
 def process_brightness(value):
@@ -10,3 +11,16 @@ def process_brightness(value):
     except ValueError:
         raise argparse.ArgumentTypeError(
             "Brightness must be an integer in the range [0 - 100]")
+
+
+def check_and_set_default(parse, args):
+    if not args.noise:
+        args.noise = [MIN_NOISE, MAX_NOISE]
+
+    if not args.resize:
+        args.resize = [MIN_RESIZE, MAX_RESIZE]
+
+    if not args.rotation:
+        args.rotation = [MIN_ROTATION, MAX_ROTATION]
+
+    return args
