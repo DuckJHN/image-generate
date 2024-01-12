@@ -19,7 +19,7 @@ def process_image(image_path, output_path, max_percentage, crop, max_angle, cons
                   horizontal, vertical, noise_max_level, blur_type, max_kernel, limit):
     img = cv.imread(image_path)
     if img is None:
-        raise Exception(f"Invalid image: {image_path}")
+        raise cv.error(f"Can not read image: {image_path}.")
 
     limit = value_util.get_number_from_str(limit)
     for x in range(limit):
@@ -45,8 +45,6 @@ def process_image(image_path, output_path, max_percentage, crop, max_angle, cons
 
 def generate_from_folder(input_path, output_path, max_percentage, crop, max_angle, constrast, brightness,
                          horizontal=False, vertical=False, noise_max_level=0, blur_type=None, max_kernel=1, limit=1, batch_size=10):
-    if not os.path.exists(input_path):
-        raise Exception("Folder not exist")
 
     image_paths = [os.path.join(input_path, image) for image in os.listdir(input_path)
                    if image.lower().endswith((".png", ".jpg", ".jpeg"))]
