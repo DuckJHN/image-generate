@@ -44,7 +44,8 @@ if __name__ == '__main__':
 
     parse.add_argument('--brightness', nargs='*', default=None, type=int,
                        help='Brightness of images in the range [0 - 100]')
-
+    parse.add_argument('--color', action=argparse.BooleanOptionalAction,
+                       help='Turn off change color of images', default=False)
     parse.add_argument('--noise', type=int, nargs='*', default=0,
                        help='Level noise in range [0 - 100]')
     parse.add_argument('--blur', nargs='?', default='other',
@@ -80,6 +81,7 @@ if __name__ == '__main__':
     constrast = args.constrast
 
     brightness = args.brightness
+    color = args.color
 
     flip_horizontal = args.flip_horizontal
     flip_vertical = args.flip_vertical
@@ -99,7 +101,7 @@ if __name__ == '__main__':
                                             blur_type=blur_type, max_kernel=kernel,
                                             noise_max_level=noise,
                                             crop=crop_auto,
-                                            brightness=brightness, constrast=constrast,
+                                            brightness=brightness, color=color, constrast=constrast,
                                             max_percentage=resize_percentage, max_angle=rotation_angle,
                                             limit=limit)
     elif image_path is not None:
@@ -108,6 +110,6 @@ if __name__ == '__main__':
                                      blur_type=blur_type, max_kernel=kernel,
                                      noise_max_level=noise,
                                      crop=crop_auto,
-                                     brightness=brightness, constrast=constrast,
+                                     brightness=brightness, color=color, constrast=constrast,
                                      max_percentage=resize_percentage, max_angle=rotation_angle,
                                      limit=limit)
