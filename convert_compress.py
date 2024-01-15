@@ -34,17 +34,18 @@ def convert_and_compress(image, output_path):
         compression_params = [int(cv.IMWRITE_PNG_COMPRESSION),
                               compression_level] if compression_level is not None else None
 
-    output_filename = f"{uuid.uuid1()}.{format.lower()}"
+    output_filename = f"{uuid.uuid1()}.{format.lower()}".replace('-', '')
     output_filepath = os.path.join(output_path, output_filename)
 
     status, abc = cv.imencode('.jpg', image)
     exif_jpg = exif.Image(abc.tobytes())
-
+    
     exif_jpg.datetime_original = random_date(
         "1/1/2008 1:30 PM", "1/1/2024 4:50 AM", random.random())
     exif_jpg.datetime_digitized = random_date(
         "1/1/2008 1:30 PM", "1/1/2024 4:50 AM", random.random())
-
+    exif_jpg.image_description =f"The image {output_filename} was created at {dt_string}"
+    
     with open(output_filepath, 'wb') as new_image_file:
         new_image_file.write(exif_jpg.get_file())
         print(
@@ -70,3 +71,8 @@ def str_time_prop(start, end, time_format, prop):
 
 def random_date(start, end, prop):
     return str_time_prop(start, end, '%m/%d/%Y %I:%M %p', prop)
+
+image = "./images/nft2.jpg"
+img = cv.imread(image)
+
+convert_and_compress(img, "output")
