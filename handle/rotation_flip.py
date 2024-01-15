@@ -8,10 +8,10 @@ def apply_rotation(image, angle):
         return image
     min_value = min(angle)
     max_value = max(angle)
-    angle = value_util.get_random_number(min_value, max_value)
+    angle_calculated = value_util.get_random_number(min_value, max_value)
     height, width = image.shape[:2]
     center = (width / 2, height / 2)
-    rotation_matrix = cv.getRotationMatrix2D(center, angle, 1.0)
+    rotation_matrix = cv.getRotationMatrix2D(center, angle_calculated, 1.0)
     rotated_image = cv.warpAffine(image, rotation_matrix, (
         width, height), flags=cv.INTER_LINEAR, borderMode=cv.BORDER_REFLECT_101)
     return rotated_image

@@ -15,7 +15,7 @@ import concurrent.futures
 start_time = time.time()
 
 
-def process_image(image_path, output_path, max_percentage, crop, max_angle, constrast, brightness,
+def process_image(image_path, output_path, max_percentage, crop, max_angle, constrast, brightness, color,
                   horizontal, vertical, noise_max_level, blur_type, max_kernel, limit):
     img = cv.imread(image_path)
     if img is None:
@@ -38,12 +38,13 @@ def process_image(image_path, output_path, max_percentage, crop, max_angle, cons
         blurred_image = nb.apply_blur(
             noise_img, blur_type=blur_type, max_kernel=max_kernel)
 
-        changed_color = np.array(apply_change_color(blurred_image))
-        changed_contrast = np.array(apply_contrast(changed_color))
+        if color:
+            blurred_image = np.array(apply_change_color(blurred_image))
+        changed_contrast = np.array(apply_contrast(blurred_image))
         convert_compress.convert_and_compress(changed_contrast, output_path)
 
 
-def generate_from_folder(input_path, output_path, max_percentage, crop, max_angle, constrast, brightness,
+def generate_from_folder(input_path, output_path, max_percentage, crop, max_angle, constrast, brightness, color,
                          horizontal=False, vertical=False, noise_max_level=0, blur_type=None, max_kernel=1, limit=1, batch_size=10):
 
     image_paths = [os.path.join(input_path, image) for image in os.listdir(input_path)
@@ -57,7 +58,7 @@ def generate_from_folder(input_path, output_path, max_percentage, crop, max_angl
             futures = []
             for image_path in batch_paths:
                 futures.append(executor.submit(process_image, image_path, output_path, max_percentage, crop,
-                                               max_angle, constrast, brightness, horizontal, vertical,
+                                               max_angle, constrast, brightness, color, horizontal, vertical,
                                                noise_max_level, blur_type, max_kernel, limit))
 
             concurrent.futures.wait(futures)
