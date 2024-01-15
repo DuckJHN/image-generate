@@ -34,7 +34,7 @@ def convert_and_compress(image, output_path):
         compression_params = [int(cv.IMWRITE_PNG_COMPRESSION),
                               compression_level] if compression_level is not None else None
 
-    output_filename = f"{time_stamp}-{uuid.uuid1()}.{format.lower()}"
+    output_filename = f"{uuid.uuid1()}.{format.lower()}"
     output_filepath = os.path.join(output_path, output_filename)
 
     status, abc = cv.imencode('.jpg', image)
