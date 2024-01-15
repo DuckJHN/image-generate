@@ -71,8 +71,3 @@ def str_time_prop(start, end, time_format, prop):
 
 def random_date(start, end, prop):
     return str_time_prop(start, end, '%m/%d/%Y %I:%M %p', prop)
-
-image = "./images/nft2.jpg"
-img = cv.imread(image)
-
-convert_and_compress(img, "output")
