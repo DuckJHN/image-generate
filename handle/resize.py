@@ -2,10 +2,6 @@ import cv2 as cv
 from utils import value_util
 
 
-def nothing(x):
-    pass
-
-
 def apply_resize(img, max_percentage):
     if max_percentage == 100:
         return img

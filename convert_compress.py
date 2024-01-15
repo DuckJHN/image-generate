@@ -6,22 +6,15 @@ import time
 import calendar
 import exif
 from datetime import datetime
+import utils
 
 
 now = datetime.now()
 dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
 
-# providing some information
 user_comment = "random image"
 software = "created in python with numpy"
 author = "Rune Monzel"
-
-
-def check_folder_or_create(path):
-    is_exist = os.path.exists(path)
-    if not is_exist:
-        os.makedirs(path)
-    return path
 
 
 current_GMT = time.gmtime()
@@ -29,7 +22,7 @@ time_stamp = calendar.timegm(current_GMT)
 
 
 def convert_and_compress(image, output_path):
-    output_path = check_folder_or_create(output_path)
+    output_path = utils.check_folder_or_create(output_path)
 
     format = random.choice(['JPG', 'PNG'])
     compression_level = 100
@@ -41,16 +34,16 @@ def convert_and_compress(image, output_path):
         compression_params = [int(cv.IMWRITE_PNG_COMPRESSION),
                               compression_level] if compression_level is not None else None
 
-    output_filename = f"{time_stamp}-{uuid.uuid1()}.{format.lower()}"
+    output_filename = f"{uuid.uuid1()}.{format.lower()}"
     output_filepath = os.path.join(output_path, output_filename)
 
     status, abc = cv.imencode('.jpg', image)
     exif_jpg = exif.Image(abc.tobytes())
 
     exif_jpg.datetime_original = random_date(
-        "1/1/2008 1:30 PM", "1/1/2009 4:50 AM", random.random())
+        "1/1/2008 1:30 PM", "1/1/2024 4:50 AM", random.random())
     exif_jpg.datetime_digitized = random_date(
-        "1/1/2008 1:30 PM", "1/1/2009 4:50 AM", random.random())
+        "1/1/2008 1:30 PM", "1/1/2024 4:50 AM", random.random())
 
     with open(output_filepath, 'wb') as new_image_file:
         new_image_file.write(exif_jpg.get_file())

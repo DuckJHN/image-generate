@@ -1,19 +1,19 @@
 
 import argparse
 import generate_image as generate_image
-import error.argument_parse as exception
-from error.argument_parse import check_input_arguments, check_enough_params
+from error.argument_parse import check_input_arguments, check_enough_params, ArgumentParserError
 from enumeration.blur_enum import list_type
 from handle.argument import param_cli
+from utils.folder_util import check_folder_exist
+import cv2
+import os
 
 if __name__ == '__main__':
 
     parse = argparse.ArgumentParser(prog='SPARKMINDS',
-                                    description='''Apply new feature to an image. 
+                                    description='''Apply new feature to an image.
                                     Features: rotate, resize, flip, noise, brightness, blur.''',
                                     epilog='''Thank you.''')
-
-    exception.ErrorCatchingArgumentParser(parse)
 
     # Require
     parse.add_argument('--folder_path', nargs='?',
@@ -44,7 +44,8 @@ if __name__ == '__main__':
 
     parse.add_argument('--brightness', nargs='*', default=None, type=int,
                        help='Brightness of images in the range [0 - 100]')
-
+    parse.add_argument('--color',action=argparse.BooleanOptionalAction, 
+                       help='Turn on/off change color (default: off).', default=False)
     parse.add_argument('--noise', type=int, nargs='*', default=0,
                        help='Level noise in range [0 - 100]')
     parse.add_argument('--blur', nargs='?', default='other',
@@ -53,61 +54,69 @@ if __name__ == '__main__':
                        help='Kernel blur default = 5')
 
     args = parse.parse_args()
-    check_input_arguments(parse, args)
+    try:
+        check_input_arguments(parse, args)
 
-    """_summary_
-        param required:
-            input_path, output_path, limit
-    """
+        """_summary_
+            param required:
+                (folder_path or image_path) , output_path, limit
+        """
 
-    args = param_cli.check_and_set_default(parse, args)
-    folder_path = args.folder_path
-    image_path = args.image_path
-    output_path = args.output_path
-    limit = args.limit
+        args = param_cli.check_and_set_default(parse, args)
+        folder_path = args.folder_path
+        image_path = args.image_path
 
-    """_summary_
-        param optional:
-            For params: noise, resize, rotate, brightness, contrast
-            1. If empty will take default parameters
-            2. Complete the min and max fields
-    """
+        output_path = args.output_path
+        limit = args.limit
 
-    resize_percentage = args.resize
-    crop_auto = args.crop
-    rotation_angle = args.rotation
+        """_summary_
+            param optional:
+                For params: noise, resize, rotate, brightness, contrast
+                1. If empty will take default parameters
+                2. Complete the min and max fields
+        """
 
-    constrast = args.constrast
+        resize_percentage = args.resize
+        crop_auto = args.crop
+        rotation_angle = args.rotation
 
-    brightness = args.brightness
+        constrast = args.constrast
 
-    flip_horizontal = args.flip_horizontal
-    flip_vertical = args.flip_vertical
-    noise = args.noise
+        brightness = args.brightness
+        color = args.color
+    
+        flip_horizontal = args.flip_horizontal
+        flip_vertical = args.flip_vertical
+        noise = args.noise
 
-    blur_type = args.blur
-    kernel = args.kn
+        blur_type = args.blur
+        kernel = args.kn
+        params_to_check = ['noise', 'resize',
+                           'rotation', 'brightness', 'constrast']
+        for param in params_to_check:
+            check_enough_params(parse, args, param)
 
-    params_to_check = ['noise', 'resize',
-                       'rotation', 'brightness', 'constrast']
-    for param in params_to_check:
-        check_enough_params(parse, args, param)
-
-    if folder_path is not None:
-        generate_image.generate_from_folder(input_path=folder_path, output_path=output_path,
-                                            horizontal=flip_horizontal, vertical=flip_vertical,
-                                            blur_type=blur_type, max_kernel=kernel,
-                                            noise_max_level=noise,
-                                            crop=crop_auto,
-                                            brightness=brightness, constrast=constrast,
-                                            max_percentage=resize_percentage, max_angle=rotation_angle,
-                                            limit=limit)
-    elif image_path is not None:
-        generate_image.process_image(image_path=image_path, output_path=output_path,
-                                     horizontal=flip_horizontal, vertical=flip_vertical,
-                                     blur_type=blur_type, max_kernel=kernel,
-                                     noise_max_level=noise,
-                                     crop=crop_auto,
-                                     brightness=brightness, constrast=constrast,
-                                     max_percentage=resize_percentage, max_angle=rotation_angle,
-                                     limit=limit)
+        if folder_path is not None and check_folder_exist(folder_path):
+            generate_image.generate_from_folder(input_path=folder_path, output_path=output_path,
+                                                horizontal=flip_horizontal, vertical=flip_vertical,
+                                                blur_type=blur_type, max_kernel=kernel,
+                                                noise_max_level=noise,
+                                                crop=crop_auto,
+                                                brightness=brightness, constrast=constrast,color = color,
+                                                max_percentage=resize_percentage, max_angle=rotation_angle,
+                                                limit=limit)
+        elif image_path is not None:
+            generate_image.process_image(image_path=image_path, output_path=output_path,
+                                         horizontal=flip_horizontal, vertical=flip_vertical,
+                                         blur_type=blur_type, max_kernel=kernel,
+                                         noise_max_level=noise,
+                                         crop=crop_auto,
+                                         brightness=brightness, constrast=constrast,color=color,
+                                         max_percentage=resize_percentage, max_angle=rotation_angle,
+                                         limit=limit)
+    except ArgumentParserError as e:
+        print(f"Error: {e}")
+    except cv2.error as e:
+        print(f"Image Error: {e}")
+    except os.error as e:
+        print(f"File Error: {e}")

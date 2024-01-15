@@ -1,5 +1,7 @@
 import os
+import time
 import cv2 as cv
+import numpy as np
 import handle.rotation_flip as rotation
 import handle.crop_image as cr
 import handle.resize as rs
@@ -7,19 +9,17 @@ import handle.brightness as br
 from handle.noise_blur import NoiseBlur as nb
 from utils import value_util
 import convert_compress
-import numpy as np
 from handle.color import apply_change_color, apply_contrast
 import concurrent.futures
-import time
 
 start_time = time.time()
 
 
-def process_image(image_path, output_path, max_percentage, crop, max_angle, constrast, brightness,
+def process_image(image_path, output_path, max_percentage, crop, max_angle, constrast, brightness, color,
                   horizontal, vertical, noise_max_level, blur_type, max_kernel, limit):
     img = cv.imread(image_path)
     if img is None:
-        raise Exception(f"Invalid image: {image_path}")
+        raise cv.error(f"Can not read image: {image_path}.")
 
     limit = value_util.get_number_from_str(limit)
     for x in range(limit):
@@ -38,15 +38,14 @@ def process_image(image_path, output_path, max_percentage, crop, max_angle, cons
         blurred_image = nb.apply_blur(
             noise_img, blur_type=blur_type, max_kernel=max_kernel)
 
-        changed_color = np.array(apply_change_color(blurred_image))
-        changed_contrast = np.array(apply_contrast(changed_color))
+        if color:
+            blurred_image = np.array(apply_change_color(blurred_image))
+        changed_contrast = np.array(apply_contrast(blurred_image))
         convert_compress.convert_and_compress(changed_contrast, output_path)
 
 
-def generate_from_folder(input_path, output_path, max_percentage, crop, max_angle, constrast, brightness,
+def generate_from_folder(input_path, output_path, max_percentage, crop, max_angle, constrast, brightness, color,
                          horizontal=False, vertical=False, noise_max_level=0, blur_type=None, max_kernel=1, limit=1, batch_size=10):
-    if not os.path.exists(input_path):
-        raise Exception("Folder not exist")
 
     image_paths = [os.path.join(input_path, image) for image in os.listdir(input_path)
                    if image.lower().endswith((".png", ".jpg", ".jpeg"))]
@@ -59,7 +58,7 @@ def generate_from_folder(input_path, output_path, max_percentage, crop, max_angl
             futures = []
             for image_path in batch_paths:
                 futures.append(executor.submit(process_image, image_path, output_path, max_percentage, crop,
-                                               max_angle, constrast, brightness, horizontal, vertical,
+                                               max_angle, constrast, brightness, color, horizontal, vertical,
                                                noise_max_level, blur_type, max_kernel, limit))
 
             concurrent.futures.wait(futures)
